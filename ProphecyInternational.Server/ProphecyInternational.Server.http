@@ -1,0 +1,6 @@
+@ProphecyInternational.Server_HostAddress = http://localhost:5029
+
+GET {{ProphecyInternational.Server_HostAddress}}/
+Accept: application/json
+
+###

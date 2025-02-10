@@ -6,3 +6,8 @@
 /ProphecyInternational.Common/obj/Debug
 /ProphecyInternational.Database/bin/Debug/net8.0
 /ProphecyInternational.Database/obj
+/ProphecyInternational.Server/bin/Debug/net8.0
+/ProphecyInternational.Server/obj
+/ProphecyInternational.Common/.vs/ProphecyInternational.Common.csproj.dtbcache.json
+/.vs
+/ProphecyInternational.Server/.vs
