@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProphecyInternational.Common.Enums;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Server.Interfaces;
@@ -25,6 +26,7 @@ namespace ProphecyInternational.Server.Controllers
         /// Gets a list of all agents.
         /// </summary>
         /// <returns>A list of AgentModel objects.</returns>
+        [AllowAnonymous]
         [HttpGet("GetAllAgents")]
         public async Task<ActionResult<IEnumerable<AgentModel>>> GetAllAgents()
         {
@@ -44,8 +46,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the agent to retrieve.</param>
         /// <returns>An AgentModel object.</returns>
+        [AllowAnonymous]
         [HttpGet("GetAgent/{id}", Name = "GetAgent")]
-        public async Task<ActionResult<AgentModel>> GetAgent([FromQuery] int id)
+        public async Task<ActionResult<AgentModel>> GetAgent(int id)
         {
             try
             {
@@ -68,6 +71,7 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="agent">The AgentModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPost("CreateAgent")]
         public async Task<ActionResult> CreateAgent([FromBody] AgentModel agent)
         {
@@ -89,8 +93,9 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the agent to update.</param>
         /// <param name="agent">The updated AgentModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPut("UpdateAgent/{id}", Name = "UpdateAgent")]
-        public async Task<IActionResult> UpdateAgent([FromQuery] int id, [FromBody] AgentModel agent)
+        public async Task<IActionResult> UpdateAgent(int id, [FromBody] AgentModel agent)
         {
             if (id != agent.Id)
             {
@@ -114,8 +119,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the agent to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpDelete("DeleteAgent/{id}", Name = "DeleteAgent")]
-        public async Task<IActionResult> DeleteAgent([FromQuery] int id)
+        public async Task<IActionResult> DeleteAgent(int id)
         {
             try
             {
@@ -135,8 +141,9 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the agent whose status is to be updated.</param>
         /// <param name="status">The new status of the agent.</param>
         /// <returns>A status indicating the result of the operation.</returns>
-        [HttpPatch("UpdateAgentStatus/{id}/status", Name = "UpdateAgentStatus")]
-        public async Task<IActionResult> UpdateAgentStatus([FromQuery] int id, [FromBody] AgentStatus status)
+        [Authorize]
+        [HttpPatch("UpdateAgentStatus")]
+        public async Task<IActionResult> UpdateAgentStatus([FromQuery] int id, [FromQuery] AgentStatus status)
         {
             try
             {

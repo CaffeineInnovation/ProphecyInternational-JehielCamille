@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Server.Interfaces;
 
@@ -24,6 +25,7 @@ namespace ProphecyInternational.Server.Controllers
         /// Gets a list of all tickets.
         /// </summary>
         /// <returns>A list of TicketModel objects.</returns>
+        [AllowAnonymous]
         [HttpGet("GetAllTickets")]
         public async Task<ActionResult<IEnumerable<TicketModel>>> GetAllTickets()
         {
@@ -43,8 +45,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the ticket to retrieve.</param>
         /// <returns>An TicketModel object.</returns>
+        [AllowAnonymous]
         [HttpGet("GetTicket/{id}", Name = "GetTicket")]
-        public async Task<ActionResult<TicketModel>> GetTicket([FromQuery] int id)
+        public async Task<ActionResult<TicketModel>> GetTicket(int id)
         {
             try
             {
@@ -67,6 +70,7 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="ticket">The TicketModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPost("CreateTicket")]
         public async Task<ActionResult> CreateTicket([FromBody] TicketModel ticket)
         {
@@ -88,8 +92,9 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the ticket to update.</param>
         /// <param name="ticket">The updated TicketModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPut("UpdateTicket/{id}", Name = "UpdateTicket")]
-        public async Task<IActionResult> UpdateTicket([FromQuery] int id, [FromBody] TicketModel ticket)
+        public async Task<IActionResult> UpdateTicket(int id, [FromBody] TicketModel ticket)
         {
             if (id != ticket.Id)
             {
@@ -113,8 +118,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the ticket to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpDelete("DeleteTicket/{id}", Name = "DeleteTicket")]
-        public async Task<IActionResult> DeleteTicket([FromQuery] int id)
+        public async Task<IActionResult> DeleteTicket(int id)
         {
             try
             {
@@ -134,6 +140,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the ticket whose status is to be updated.</param>
         /// <param name="agentId">The new agent of the ticket.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPatch("AsssignTicketToAgent", Name = "UpdateTicketStatus")]
         public async Task<IActionResult> AsssignTicketToAgent([FromQuery] int id, [FromQuery] int agentId)
         {

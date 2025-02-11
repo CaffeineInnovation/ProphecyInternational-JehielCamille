@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Server.Interfaces;
 
@@ -24,6 +25,7 @@ namespace ProphecyInternational.Server.Controllers
         /// Gets a list of all calls.
         /// </summary>
         /// <returns>A list of CallModel objects.</returns>
+        [AllowAnonymous]
         [HttpGet("GetAllCalls")]
         public async Task<ActionResult<IEnumerable<CallModel>>> GetAllCalls()
         {
@@ -43,8 +45,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the call to retrieve.</param>
         /// <returns>An CallModel object.</returns>
+        [AllowAnonymous]
         [HttpGet("GetCall/{id}", Name = "GetCall")]
-        public async Task<ActionResult<CallModel>> GetCall([FromQuery] int id)
+        public async Task<ActionResult<CallModel>> GetCall(int id)
         {
             try
             {
@@ -67,6 +70,7 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="call">The CallModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPost("CreateCall")]
         public async Task<ActionResult> CreateCall([FromBody] CallModel call)
         {
@@ -88,8 +92,9 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the call to update.</param>
         /// <param name="call">The updated CallModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPut("UpdateCall/{id}", Name = "UpdateCall")]
-        public async Task<IActionResult> UpdateCall([FromQuery] int id, [FromBody] CallModel call)
+        public async Task<IActionResult> UpdateCall(int id, [FromBody] CallModel call)
         {
             if (id != call.Id)
             {
@@ -113,8 +118,9 @@ namespace ProphecyInternational.Server.Controllers
         /// </summary>
         /// <param name="id">The ID of the call to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpDelete("DeleteCall/{id}", Name = "DeleteCall")]
-        public async Task<IActionResult> DeleteCall([FromQuery] int id)
+        public async Task<IActionResult> DeleteCall(int id)
         {
             try
             {
@@ -134,6 +140,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the call whose agent is to be updated.</param>
         /// <param name="agentId">The new agent of the call.</param>
         /// <returns>A status indicating the result of the operation.</returns>
+        [Authorize]
         [HttpPatch("AssignCallToAgent")]
         public async Task<IActionResult> AssignCallToAgent([FromQuery] int id, [FromQuery] int agentId)
         {

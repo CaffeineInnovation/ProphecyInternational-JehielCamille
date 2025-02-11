@@ -49,6 +49,7 @@
     <Compile Include="Models\AgentModel.cs" />
     <Compile Include="Models\CallModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\TicketModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
