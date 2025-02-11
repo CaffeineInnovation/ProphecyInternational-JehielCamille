@@ -1,0 +1,877 @@
+{
+  "name": "ProphecyInternational - Call Center Management",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "AgentController",
+      "root": {
+        "meta": {
+          "name": "AgentController"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "CreateAgent",
+          "seq": 3,
+          "request": {
+            "url": "{{base_url}}/Agent/CreateAgent",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"id\": 0,  \r\n  \"name\": \"Abc Xyz\",\r\n  \"email\": \"abcXyz@example.com\",\r\n  \"phone\": \"123-456-7890\",\r\n  \"status\": 1\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 201\", function () {\n    expect(res.getStatus()).to.equal(201);\n});\n\n\ntest(\"Response has the required fields - id, name, email, phoneExtension, and status\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData).to.have.property('id');\n    expect(responseData).to.have.property('name');\n    expect(responseData).to.have.property('email');\n    expect(responseData).to.have.property('phoneExtension');\n    expect(responseData).to.have.property('status');\n});\n\n\ntest(\"Email is in a valid format\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);\n});\n\n\ntest(\"PhoneExtension is either null or a non-empty string\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.phoneExtension).to.satisfy((value) => {\n        return value === null || (typeof value === 'string' && value.length > 0);\n    }, \"PhoneExtension should be either null or a non-empty string\");\n});\n\n\ntest(\"Status is within the expected range\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.have.property('status');\n    expect(responseData.status).to.be.within(0, 3);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "DeleteAgent",
+          "seq": 6,
+          "request": {
+            "url": "{{base_url}}/Agent/DeleteAgent/{{id}}",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetAgentById",
+          "seq": 2,
+          "request": {
+            "url": "{{base_url}}/Agent/GetAgent/{{id}}",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Content type is application/json\", function () {\n    expect(res.getHeader(\"Content-Type\")).to.include(\"application/json\");\n});\n\n\ntest(\"Id is a non-negative integer\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.id).to.be.a('number').and.to.satisfy((id) => id >= 0, \"Id should be a non-negative integer\");\n});\n\n\ntest(\"Name is a non-empty string\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\n});\n\n\ntest(\"Email is in a valid format\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData.email).to.match(/^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/, \"Email should be in a valid format\");\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetAllAgents",
+          "seq": 1,
+          "request": {
+            "url": "{{base_url}}/Agent/GetAllAgents",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n  expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields - id, name, email, phoneExtension, and status\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array');\n    responseData.forEach(function(agent) {\n        expect(agent).to.have.property('id');\n        expect(agent).to.have.property('name');\n        expect(agent).to.have.property('email');\n        expect(agent).to.have.property('phoneExtension');\n        expect(agent).to.have.property('status');\n    });\n});\n\n\ntest(\"Email is in a valid format\", function () {\n  const responseData = res.getBody();\n  \n  responseData.forEach(function(agent) {\n    expect(agent.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\n  });\n});\n\n\ntest(\"Phone extension is either null or a non-empty string\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array');\n    responseData.forEach(function(agent) {\n        expect(agent.phoneExtension).to.satisfy(function (pe) {\n            return pe === null || typeof pe === 'string' && pe.length > 0;\n        }, 'Phone extension should be either null or a non-empty string');\n    });\n});\n\n\ntest(\"Status is a non-negative integer\", function () {\n    const responseData = res.getBody();\n    \n    responseData.forEach(function(agent) {\n        expect(agent.status).to.be.a('number');\n        expect(agent.status).to.be.at.least(0);\n    });\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "UpdateAgent",
+          "seq": 5,
+          "request": {
+            "url": "{{base_url}}/Agent/UpdateAgent/{{id}}",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"id\": {{id}},  \r\n  \"name\": \"Updated Name\",\r\n  \"email\": \"updatedemail@example.com\",\r\n  \"phone\": \"987-654-3210\",\r\n  \"status\": 2\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "UpdateAgentStatus",
+          "seq": 4,
+          "request": {
+            "url": "{{base_url}}/Agent/UpdateAgentStatus?id={{id}}&status={{status}}",
+            "method": "PATCH",
+            "headers": [],
+            "params": [
+              {
+                "name": "id",
+                "value": "{{id}}",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "status",
+                "value": "{{status}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "AuthController",
+      "root": {
+        "meta": {
+          "name": "AuthController"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Login",
+          "seq": 1,
+          "request": {
+            "url": "{{base_url}}/Auth/Login",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "accept",
+                "value": "*/*",
+                "enabled": true
+              },
+              {
+                "name": "accept-language",
+                "value": "en-US,en;q=0.9",
+                "enabled": true
+              },
+              {
+                "name": "authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKZWhpZWxDYW1pbGxlIiwianRpIjoiODc4ZGZmMGQtYjAyNS00YTg4LWE0ZWEtOTU0ZjBiYmUxZDI0IiwiZXhwIjoxNzM5Mjg0OTM3LCJpc3MiOiJQcm9waGVjeUludGVybmF0aW9uYWxDb2RpbmdFeGVyY2lzZSIsImF1ZCI6IlByb3BoZWN5SW50ZXJuYXRpb25hbENvZGluZ0V4ZXJjaXNlIn0.h8tcgSNiNCorguwMBJp7J7FOG9JqKI3E0Zc6tXf8Y7Q",
+                "enabled": true
+              },
+              {
+                "name": "content-type",
+                "value": "application/json",
+                "enabled": true
+              },
+              {
+                "name": "origin",
+                "value": "https://localhost:7290",
+                "enabled": true
+              },
+              {
+                "name": "priority",
+                "value": "u=1, i",
+                "enabled": true
+              },
+              {
+                "name": "referer",
+                "value": "https://localhost:7290/swagger/index.html",
+                "enabled": true
+              },
+              {
+                "name": "sec-ch-ua",
+                "value": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\"",
+                "enabled": true
+              },
+              {
+                "name": "sec-ch-ua-mobile",
+                "value": "?0",
+                "enabled": true
+              },
+              {
+                "name": "sec-ch-ua-platform",
+                "value": "\"Windows\"",
+                "enabled": true
+              },
+              {
+                "name": "sec-fetch-dest",
+                "value": "empty",
+                "enabled": true
+              },
+              {
+                "name": "sec-fetch-mode",
+                "value": "cors",
+                "enabled": true
+              },
+              {
+                "name": "sec-fetch-site",
+                "value": "same-origin",
+                "enabled": true
+              },
+              {
+                "name": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+                "enabled": true
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\"\n\n}",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\r\n    expect(res.getStatus()).to.equal(200);\r\n});\r\n\r\n\r\ntest(\"Response time is less than 500ms\", function () {\r\n  expect(res.getResponseTime()).to.be.below(500);\r\n});\r\n\r\n\r\ntest(\"Response has the required field - token\", function () {\r\n    const responseData = res.getBody();\r\n    \r\n    expect(responseData).to.be.an('object');\r\n    expect(responseData.token).to.exist;\r\n});\r\n\r\n\r\ntest(\"Token is a non-empty string\", function () {\r\n  const responseData = res.getBody();\r\n  \r\n  expect(responseData.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");\r\n});\r\n\r\n\r\ntest(\"Content-Type header is application/json\", function () {\r\n    expect(res.getHeader(\"Content-Type\")).to.include(\"application/json\");\r\n});\r\n\r\n// Stores the token from the response in an environment or global variable\r\nvar responseBody = res.getBody();\r\nvar token = responseBody.token;\r\nbru.setVar(\"bearerToken\", token);",
+            "docs": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "CustomerController",
+      "root": {
+        "meta": {
+          "name": "CustomerController"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "CreateCustomer",
+          "seq": 3,
+          "request": {
+            "url": "{{base_url}}/Customer/CreateCustomer",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"id\": \"CUST003\",\r\n  \"name\": \"Crisostomo delos Santos\",\r\n  \"email\": \"cdelosSantos@test.com\",\r\n  \"phoneNumber\": \"1234567891\",\r\n  \"lastContactDate\": \"2025-01-01T00:00:00\"\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "DeleteCustomer",
+          "seq": 5,
+          "request": {
+            "url": "{{base_url}}/Customer/DeleteCustomer/{{customerId}}",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetAllCustomers",
+          "seq": 1,
+          "request": {
+            "url": "{{base_url}}/Customer/GetAllCustomers",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields - id, name, email, phoneNumber, and lastContactDate\", function () {\n    const responseData = res.getBody();\n\n    expect(responseData).to.be.an('array');\n    responseData.forEach(function(customer) {\n        expect(customer.id).to.exist;\n        expect(customer.name).to.exist;\n        expect(customer.email).to.exist;\n        expect(customer.phoneNumber).to.exist;\n        expect(customer.lastContactDate).to.exist;\n    });\n});\n\n\ntest(\"Email is in a valid format\", function () {\n    const responseData = res.getBody();\n    \n    responseData.forEach(function(customer) {\n        expect(customer.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);\n    });\n});\n\n\ntest(\"Phone number is in a valid format\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('array');\n  responseData.forEach(function(customer) {\n    expect(customer.phoneNumber).to.match(/^\\d{3}-\\d{3}-\\d{4}$/);\n  });\n});\n\n\ntest(\"Last contact date is in a valid date format\", function () {\n    const responseData = res.getBody();\n    \n    responseData.forEach(function(customer) {\n        expect(customer.lastContactDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\n    });\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetCustomerById",
+          "seq": 2,
+          "request": {
+            "url": "{{base_url}}/Customer/GetCustomer/{{customerId}}",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData).to.have.property('id');\n    expect(responseData).to.have.property('name');\n    expect(responseData).to.have.property('email');\n    expect(responseData).to.have.property('phoneNumber');\n    expect(responseData).to.have.property('lastContactDate');\n});\n\n\ntest(\"Email is in a valid format\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email should be in a valid format\");\n});\n\n\ntest(\"Phone number is in a valid format\", function () {\n  const responseData = res.getBody();\n\n  expect(responseData).to.be.an('object');\n  expect(responseData.phoneNumber).to.match(/^\\d{3}-\\d{3}-\\d{4}$/);\n});\n\n\ntest(\"Last contact date is either null or in a valid date format\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.lastContactDate).to.satisfy(function (value) {\n        return value === null || !isNaN(Date.parse(value));\n    }, \"Last contact date should be either null or in a valid date format\");\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "UpdateCustomer",
+          "seq": 4,
+          "request": {
+            "url": "{{base_url}}/Customer/UpdateCustomer/{{customerId}}",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"id\":\"{{customerId}}\",\r\n  \"name\": \"Updated Name\",\r\n  \"email\": \"updated@example.com\",\r\n  \"phoneNumber\": \"987-654-3210\",\r\n  \"lastContactDate\": \"2025-01-01T00:00:00\"\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "CallController",
+      "root": {
+        "meta": {
+          "name": "CallController"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "AssignCallToAgent",
+          "seq": 5,
+          "request": {
+            "url": "{{base_url}}/Call/AssignCallToAgent?id={{id}}&agentId={{agentId}}",
+            "method": "PATCH",
+            "headers": [],
+            "params": [
+              {
+                "name": "id",
+                "value": "{{id}}",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "agentId",
+                "value": "{{agentId}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "CreateCall",
+          "seq": 3,
+          "request": {
+            "url": "{{base_url}}/Call/CreateCall",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"customerId\": \"CUST001\",\r\n  \"agentId\": 2,\r\n  \"startTime\": \"2025-01-01T00:00:00\",\r\n  \"endTime\": null,\r\n  \"status\": 0,\r\n  \"notes\": null\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 201\", function () {\n    expect(res.getStatus()).to.equal(201);\n});\n\n\ntest(\"Response has the required fields\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('object');\n  expect(responseData).to.have.property('id');\n  expect(responseData).to.have.property('customerId');\n  expect(responseData).to.have.property('agentId');\n  expect(responseData).to.have.property('startTime');\n  expect(responseData).to.have.property('endTime');\n  expect(responseData).to.have.property('status');\n  expect(responseData).to.have.property('notes');\n});\n\n\ntest(\"Start time is in a valid date format\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/, \"Start time should be in valid date format\");\n});\n\n\ntest(\"Verify the endTime field is either null or in a valid date format\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.endTime).to.satisfy((endTime) => {\n        return endTime === null || !isNaN(Date.parse(endTime));\n    }, \"endTime should be either null or a valid date format\");\n});\n\n\ntest(\"Status field is within the expected range (0 to 3)\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.status).to.exist;\n    expect(responseData.status).to.be.a('number');\n    expect(responseData.status).to.be.within(0, 3);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "DeleteCall",
+          "seq": 6,
+          "request": {
+            "url": "{{base_url}}/Call/DeleteCall/{{callId}}",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetAllCalls",
+          "seq": 1,
+          "request": {
+            "url": "{{base_url}}/Call/GetAllCalls",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array').that.is.not.empty;\n    responseData.forEach(function(call) {\n        expect(call).to.have.property('id');\n        expect(call).to.have.property('customerId');\n        expect(call).to.have.property('agentId');\n        expect(call).to.have.property('startTime');\n        expect(call).to.have.property('endTime');\n        expect(call).to.have.property('status');\n        expect(call).to.have.property('notes');\n    });\n});\n\n\ntest(\"CustomerId and notes fields can be null\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array');\n    responseData.forEach(function(call) {\n        expect(call.customerId).to.be.null;\n        expect(call.notes).to.be.null;\n    });\n});\n\n\ntest(\"Start time is in a valid date format\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array');\n    responseData.forEach(function(call) {\n        expect(call.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);\n    });\n});\n\n\ntest(\"Agent ID is a non-negative integer\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('array');\n  responseData.forEach(function(call) {\n    expect(call.agentId).to.be.a('number').and.to.be.at.least(0);\n  });\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetCallById",
+          "seq": 2,
+          "request": {
+            "url": "{{base_url}}/Call/GetCall/{{id}}",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData).to.have.property('id');\n    expect(responseData).to.have.property('customerId');\n    expect(responseData).to.have.property('startTime');\n    expect(responseData).to.have.property('endTime');\n    expect(responseData).to.have.property('status');\n    expect(responseData).to.have.property('notes');\n});\n\n\ntest(\"CustomerId is a non-empty string\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.customerId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"CustomerId should be a non-empty string\");\n});\n\n\ntest(\"Start time is in a valid date format\", function () {\n    const responseData = res.getBody();\n\n    expect(responseData.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);\n});\n\n\ntest(\"Notes is a string or null\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('object');\n  expect(responseData.notes).to.satisfy((value) => {\n    return value === null || typeof value === 'string';\n  }, \"Notes should be a string or null\");\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "UpdateCall",
+          "seq": 4,
+          "request": {
+            "url": "{{base_url}}/Call/UpdateCall/{{id}}",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"customerId\": \"CUST001\",\r\n  \"agentId\": 1,\r\n  \"startTime\": \"2025-02-12T00:00:00\",\r\n  \"endTime\": \"2025-02-12T00:10:00\",\r\n  \"status\": 2,\r\n  \"notes\": \"Updating call\"\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "TicketController",
+      "root": {
+        "meta": {
+          "name": "TicketController"
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "AsssignTicketToAgent",
+          "seq": 5,
+          "request": {
+            "url": "{{base_url}}/Ticket/AsssignTicketToAgent?id={{id}}&agentId={{agentId}}",
+            "method": "PATCH",
+            "headers": [],
+            "params": [
+              {
+                "name": "id",
+                "value": "{{id}}",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "agentId",
+                "value": "{{agentId}}",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "CreateTicket",
+          "seq": 3,
+          "request": {
+            "url": "{{base_url}}/Ticket/CreateTicket",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"CustomerId\": \"CUST002\",\r\n  \"AgentId\": 2,\r\n  \"Status\": 1,\r\n  \"Priority\": 2,\r\n  \"CreatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"UpdatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"Description\": \"Billing discrepancy\"\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 201\", function () {\n    expect(res.getStatus()).to.equal(201);\n});\n\n\ntest(\"Response has the required fields\", function () {\n    const responseData = res.getBody();\n\n    expect(responseData).to.be.an('object');\n    expect(responseData).to.have.property('id');\n    expect(responseData).to.have.property('customerId');\n    expect(responseData).to.have.property('agentId');\n    expect(responseData).to.have.property('status');\n    expect(responseData).to.have.property('priority');\n    expect(responseData).to.have.property('createdAt');\n    expect(responseData).to.have.property('updatedAt');\n    expect(responseData).to.have.property('description');\n    expect(responseData).to.have.property('resolution');\n});\n\n\ntest(\"CustomerId and agentId are in a valid format\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('object');\n  expect(responseData.customerId).to.be.a('string').and.to.not.be.empty;\n  expect(responseData.agentId).to.be.a('number').and.to.be.above(0);\n});\n\n\ntest(\"CreatedAt and updatedAt are in valid date format\", function () {\n    const responseData = res.getBody();\n\n    expect(responseData.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"createdAt is not in valid date format\");\n    expect(responseData.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"updatedAt is not in valid date format\");\n});\n\n\ntest(\"Description is a non-empty string\", function () {\n  const responseData = res.getBody();\n  expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1);\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "DeleteTicket",
+          "seq": 6,
+          "request": {
+            "url": "{{base_url}}/Ticket/DeleteTicket/{{id}}",
+            "method": "DELETE",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetAllTickets",
+          "seq": 1,
+          "request": {
+            "url": "{{base_url}}/Ticket/GetAllTickets",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Content type is application/json\", function () {\n    expect(res.getHeader(\"Content-Type\")).to.include(\"application/json\");\n});\n\n\ntest(\"First ticket object has the correct structure\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array').that.is.not.empty;\n    \n    responseData.forEach(function(ticket) {\n        expect(ticket).to.be.an('object');\n        expect(ticket).to.have.property('id');\n        expect(ticket).to.have.property('customerId');\n        expect(ticket).to.have.property('agentId');\n        expect(ticket).to.have.property('status');\n        expect(ticket).to.have.property('priority');\n        expect(ticket).to.have.property('createdAt');\n        expect(ticket).to.have.property('updatedAt');\n        expect(ticket).to.have.property('description');\n        expect(ticket).to.have.property('resolution');\n    });\n});\n\n\ntest(\"CreatedAt and updatedAt are in valid date format\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('array');\n    \n    responseData.forEach(function(ticket) {\n        expect(ticket.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"createdAt is not in valid date format\");\n        expect(ticket.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"updatedAt is not in valid date format\");\n    });\n});\n\n\ntest(\"Description field is a non-empty string\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('array');\n  responseData.forEach(function(ticket) {\n    expect(ticket.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\n  });\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GetTicketById",
+          "seq": 2,
+          "request": {
+            "url": "{{base_url}}/Ticket/GetTicket/{{id}}",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "test(\"Response status code is 200\", function () {\n    expect(res.getStatus()).to.equal(200);\n});\n\n\ntest(\"Response has the required fields\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData).to.include.all.keys('id', 'customerId', 'agentId', 'status', 'priority', 'createdAt', 'updatedAt', 'description', 'resolution');\n});\n\n\ntest(\"CustomerId should not be empty\", function () {\n  const responseData = res.getBody();\n  \n  expect(responseData).to.be.an('object');\n  expect(responseData.customerId).to.exist.and.to.not.be.empty;\n});\n\n\ntest(\"AgentId is a non-negative integer\", function () {\n    const responseData = res.getBody();\n    \n    expect(responseData).to.be.an('object');\n    expect(responseData.agentId).to.be.a('number');\n    expect(responseData.agentId).to.be.at.least(0);\n});\n\n\ntest(\"Verify the 'resolution' field is either null or a non-empty string\", function () {\n    const responseData = res.getBody();\n\n    expect(responseData).to.be.an('object');\n    expect(responseData.resolution).to.satisfy((value) => {\n        return value === null || (typeof value === 'string' && value.length > 0);\n    }, \"Resolution should either be null or a non-empty string\");\n});",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "UpdateTicket",
+          "seq": 4,
+          "request": {
+            "url": "{{base_url}}/Ticket/UpdateTicket/{{id}}",
+            "method": "PUT",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\r\n  \"CustomerId\": \"CUST002\",\r\n  \"AgentId\": 2,\r\n  \"Status\": 2,\r\n  \"Priority\": 2,\r\n  \"CreatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"UpdatedAt\": \"2025-02-12T00:00:00Z\",\r\n  \"Description\": \"Resolved ticket\"\r\n}\r\n",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "{{bearerToken}}"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      },
+      "vars": {
+        "req": [
+          {
+            "name": "bearerToken",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "IWYnjbWteaWQmsRFhSrcy"
+          },
+          {
+            "name": "base_url",
+            "value": "https://localhost:7290",
+            "enabled": true,
+            "local": false,
+            "uid": "KaPhij1eABafCfBGX6nJ6"
+          },
+          {
+            "name": "id",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "waJrZL8md93tg7vXrpUtS"
+          },
+          {
+            "name": "customerId",
+            "value": "",
+            "enabled": true,
+            "local": false,
+            "uid": "tRpYpbNTQx8KZaJg0VBPm"
+          }
+        ]
+      }
+    },
+    "meta": {
+      "name": "ProphecyInternational - Call Center Management"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "ProphecyInternational - Call Center Management",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}

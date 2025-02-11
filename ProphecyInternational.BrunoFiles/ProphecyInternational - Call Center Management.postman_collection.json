@@ -1,0 +1,1378 @@
+{
+	"info": {
+		"_postman_id": "8226d57d-5e35-4219-83bb-2293bfa669f3",
+		"name": "ProphecyInternational - Call Center Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40328756"
+	},
+	"item": [
+		{
+			"name": "AuthController",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required field - token\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.token).to.exist;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Token is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData.token).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Token should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"// Stores the token from the response in an environment or global variable\r",
+									"var responseBody = pm.response.json();\r",
+									"var token = responseBody.token;\r",
+									"pm.collectionVariables.set(\"bearerToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "accept-language",
+								"value": "en-US,en;q=0.9"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKZWhpZWxDYW1pbGxlIiwianRpIjoiODc4ZGZmMGQtYjAyNS00YTg4LWE0ZWEtOTU0ZjBiYmUxZDI0IiwiZXhwIjoxNzM5Mjg0OTM3LCJpc3MiOiJQcm9waGVjeUludGVybmF0aW9uYWxDb2RpbmdFeGVyY2lzZSIsImF1ZCI6IlByb3BoZWN5SW50ZXJuYXRpb25hbENvZGluZ0V4ZXJjaXNlIn0.h8tcgSNiNCorguwMBJp7J7FOG9JqKI3E0Zc6tXf8Y7Q"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://localhost:7290"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://localhost:7290/swagger/index.html"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-origin"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Auth/Login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Auth",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AgentController",
+			"item": [
+				{
+					"name": "GetAllAgents",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, name, email, phoneExtension, and status\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(agent) {",
+									"        pm.expect(agent).to.have.property('id');",
+									"        pm.expect(agent).to.have.property('name');",
+									"        pm.expect(agent).to.have.property('email');",
+									"        pm.expect(agent).to.have.property('phoneExtension');",
+									"        pm.expect(agent).to.have.property('status');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  responseData.forEach(function(agent) {",
+									"    pm.expect(agent.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Phone extension is either null or a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(agent) {",
+									"        pm.expect(agent.phoneExtension).to.satisfy(function (pe) {",
+									"            return pe === null || typeof pe === 'string' && pe.length > 0;",
+									"        }, 'Phone extension should be either null or a non-empty string');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(agent) {",
+									"        pm.expect(agent.status).to.be.a('number');",
+									"        pm.expect(agent.status).to.be.at.least(0);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Agent/GetAllAgents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"GetAllAgents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAgentById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.be.a('number').and.to.satisfy((id) => id >= 0, \"Id should be a non-negative integer\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Name is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.email).to.match(/^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/, \"Email should be in a valid format\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Agent/GetAgent/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"GetAgent",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateAgent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, name, email, phoneExtension, and status\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('email');",
+									"    pm.expect(responseData).to.have.property('phoneExtension');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"PhoneExtension is either null or a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.phoneExtension).to.satisfy((value) => {",
+									"        return value === null || (typeof value === 'string' && value.length > 0);",
+									"    }, \"PhoneExtension should be either null or a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status is within the expected range\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData.status).to.be.within(0, 3);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,  \r\n  \"name\": \"Abc Xyz\",\r\n  \"email\": \"abcXyz@example.com\",\r\n  \"phone\": \"123-456-7890\",\r\n  \"status\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Agent/CreateAgent",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"CreateAgent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAgentStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Agent/UpdateAgentStatus?id={{id}}&status={{status}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"UpdateAgentStatus"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "status",
+									"value": "{{status}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAgent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": {{id}},  \r\n  \"name\": \"Updated Name\",\r\n  \"email\": \"updatedemail@example.com\",\r\n  \"phone\": \"987-654-3210\",\r\n  \"status\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Agent/UpdateAgent/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"UpdateAgent",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAgent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Agent/DeleteAgent/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Agent",
+								"DeleteAgent",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CallController",
+			"item": [
+				{
+					"name": "GetAllCalls",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    responseData.forEach(function(call) {",
+									"        pm.expect(call).to.have.property('id');",
+									"        pm.expect(call).to.have.property('customerId');",
+									"        pm.expect(call).to.have.property('agentId');",
+									"        pm.expect(call).to.have.property('startTime');",
+									"        pm.expect(call).to.have.property('endTime');",
+									"        pm.expect(call).to.have.property('status');",
+									"        pm.expect(call).to.have.property('notes');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"CustomerId and notes fields can be null\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(call) {",
+									"        pm.expect(call.customerId).to.be.null;",
+									"        pm.expect(call.notes).to.be.null;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Start time is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(call) {",
+									"        pm.expect(call.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Agent ID is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(call) {",
+									"    pm.expect(call.agentId).to.be.a('number').and.to.be.at.least(0);",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Call/GetAllCalls",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"GetAllCalls"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCallById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('customerId');",
+									"    pm.expect(responseData).to.have.property('startTime');",
+									"    pm.expect(responseData).to.have.property('endTime');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData).to.have.property('notes');",
+									"});",
+									"",
+									"",
+									"pm.test(\"CustomerId is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.customerId).to.be.a('string').and.to.have.lengthOf.at.least(1, \"CustomerId should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Start time is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Notes is a string or null\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.notes).to.satisfy((value) => {",
+									"    return value === null || typeof value === 'string';",
+									"  }, \"Notes should be a string or null\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Call/GetCall/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"GetCall",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateCall",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData).to.have.property('id');",
+									"  pm.expect(responseData).to.have.property('customerId');",
+									"  pm.expect(responseData).to.have.property('agentId');",
+									"  pm.expect(responseData).to.have.property('startTime');",
+									"  pm.expect(responseData).to.have.property('endTime');",
+									"  pm.expect(responseData).to.have.property('status');",
+									"  pm.expect(responseData).to.have.property('notes');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Start time is in a valid date format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.startTime).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/, \"Start time should be in valid date format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify the endTime field is either null or in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.endTime).to.satisfy((endTime) => {",
+									"        return endTime === null || !isNaN(Date.parse(endTime));",
+									"    }, \"endTime should be either null or a valid date format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Status field is within the expected range (0 to 3)\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.status).to.exist;",
+									"    pm.expect(responseData.status).to.be.a('number');",
+									"    pm.expect(responseData.status).to.be.within(0, 3);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerId\": \"CUST001\",\r\n  \"agentId\": 2,\r\n  \"startTime\": \"2025-01-01T00:00:00\",\r\n  \"endTime\": null,\r\n  \"status\": 0,\r\n  \"notes\": null\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Call/CreateCall",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"CreateCall"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCall",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerId\": \"CUST001\",\r\n  \"agentId\": 1,\r\n  \"startTime\": \"2025-02-12T00:00:00\",\r\n  \"endTime\": \"2025-02-12T00:10:00\",\r\n  \"status\": 2,\r\n  \"notes\": \"Updating call\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Call/UpdateCall/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"UpdateCall",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AssignCallToAgent",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Call/AssignCallToAgent?id={{id}}&agentId={{agentId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"AssignCallToAgent"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "agentId",
+									"value": "{{agentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCall",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Call/DeleteCall/{{callId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Call",
+								"DeleteCall",
+								"{{callId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CustomerController",
+			"item": [
+				{
+					"name": "GetAllCustomers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields - id, name, email, phoneNumber, and lastContactDate\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(customer) {",
+									"        pm.expect(customer.id).to.exist;",
+									"        pm.expect(customer.name).to.exist;",
+									"        pm.expect(customer.email).to.exist;",
+									"        pm.expect(customer.phoneNumber).to.exist;",
+									"        pm.expect(customer.lastContactDate).to.exist;",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(customer) {",
+									"        pm.expect(customer.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Phone number is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(customer) {",
+									"    pm.expect(customer.phoneNumber).to.match(/^\\d{3}-\\d{3}-\\d{4}$/);",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Last contact date is in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(customer) {",
+									"        pm.expect(customer.lastContactDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Customer/GetAllCustomers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Customer",
+								"GetAllCustomers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCustomerById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('email');",
+									"    pm.expect(responseData).to.have.property('phoneNumber');",
+									"    pm.expect(responseData).to.have.property('lastContactDate');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email should be in a valid format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Phone number is in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.phoneNumber).to.match(/^\\d{3}-\\d{3}-\\d{4}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Last contact date is either null or in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.lastContactDate).to.satisfy(function (value) {",
+									"        return value === null || !isNaN(Date.parse(value));",
+									"    }, \"Last contact date should be either null or in a valid date format\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Customer/GetCustomer/{{customerId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Customer",
+								"GetCustomer",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateCustomer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"CUST003\",\r\n  \"name\": \"Crisostomo delos Santos\",\r\n  \"email\": \"cdelosSantos@test.com\",\r\n  \"phoneNumber\": \"1234567891\",\r\n  \"lastContactDate\": \"2025-01-01T00:00:00\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Customer/CreateCustomer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Customer",
+								"CreateCustomer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCustomer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\":\"{{customerId}}\",\r\n  \"name\": \"Updated Name\",\r\n  \"email\": \"updated@example.com\",\r\n  \"phoneNumber\": \"987-654-3210\",\r\n  \"lastContactDate\": \"2025-01-01T00:00:00\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Customer/UpdateCustomer/{{customerId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Customer",
+								"UpdateCustomer",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCustomer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Customer/DeleteCustomer/{{customerId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Customer",
+								"DeleteCustomer",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TicketController",
+			"item": [
+				{
+					"name": "GetAllTickets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"First ticket object has the correct structure\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    ",
+									"    responseData.forEach(function(ticket) {",
+									"        pm.expect(ticket).to.be.an('object');",
+									"        pm.expect(ticket).to.have.property('id');",
+									"        pm.expect(ticket).to.have.property('customerId');",
+									"        pm.expect(ticket).to.have.property('agentId');",
+									"        pm.expect(ticket).to.have.property('status');",
+									"        pm.expect(ticket).to.have.property('priority');",
+									"        pm.expect(ticket).to.have.property('createdAt');",
+									"        pm.expect(ticket).to.have.property('updatedAt');",
+									"        pm.expect(ticket).to.have.property('description');",
+									"        pm.expect(ticket).to.have.property('resolution');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"CreatedAt and updatedAt are in valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    ",
+									"    responseData.forEach(function(ticket) {",
+									"        pm.expect(ticket.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"createdAt is not in valid date format\");",
+									"        pm.expect(ticket.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"updatedAt is not in valid date format\");",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description field is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(ticket) {",
+									"    pm.expect(ticket.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Ticket/GetAllTickets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"GetAllTickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTicketById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.include.all.keys('id', 'customerId', 'agentId', 'status', 'priority', 'createdAt', 'updatedAt', 'description', 'resolution');",
+									"});",
+									"",
+									"",
+									"pm.test(\"CustomerId should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.customerId).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"AgentId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.agentId).to.be.a('number');",
+									"    pm.expect(responseData.agentId).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Verify the 'resolution' field is either null or a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.resolution).to.satisfy((value) => {",
+									"        return value === null || (typeof value === 'string' && value.length > 0);",
+									"    }, \"Resolution should either be null or a non-empty string\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Ticket/GetTicket/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"GetTicket",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTicket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('id');",
+									"    pm.expect(responseData).to.have.property('customerId');",
+									"    pm.expect(responseData).to.have.property('agentId');",
+									"    pm.expect(responseData).to.have.property('status');",
+									"    pm.expect(responseData).to.have.property('priority');",
+									"    pm.expect(responseData).to.have.property('createdAt');",
+									"    pm.expect(responseData).to.have.property('updatedAt');",
+									"    pm.expect(responseData).to.have.property('description');",
+									"    pm.expect(responseData).to.have.property('resolution');",
+									"});",
+									"",
+									"",
+									"pm.test(\"CustomerId and agentId are in a valid format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.customerId).to.be.a('string').and.to.not.be.empty;",
+									"  pm.expect(responseData.agentId).to.be.a('number').and.to.be.above(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"CreatedAt and updatedAt are in valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"createdAt is not in valid date format\");",
+									"    pm.expect(responseData.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"updatedAt is not in valid date format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"CustomerId\": \"CUST002\",\r\n  \"AgentId\": 2,\r\n  \"Status\": 1,\r\n  \"Priority\": 2,\r\n  \"CreatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"UpdatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"Description\": \"Billing discrepancy\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Ticket/CreateTicket",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"CreateTicket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTicket",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"CustomerId\": \"CUST002\",\r\n  \"AgentId\": 2,\r\n  \"Status\": 2,\r\n  \"Priority\": 2,\r\n  \"CreatedAt\": \"2024-02-12T00:00:00Z\",\r\n  \"UpdatedAt\": \"2025-02-12T00:00:00Z\",\r\n  \"Description\": \"Resolved ticket\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Ticket/UpdateTicket/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"UpdateTicket",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AsssignTicketToAgent",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Ticket/AsssignTicketToAgent?id={{id}}&agentId={{agentId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"AsssignTicketToAgent"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								},
+								{
+									"key": "agentId",
+									"value": "{{agentId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTicket",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Ticket/DeleteTicket/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Ticket",
+								"DeleteTicket",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearerToken",
+			"value": ""
+		},
+		{
+			"key": "base_url",
+			"value": "https://localhost:7290",
+			"type": "default"
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "customerId",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
