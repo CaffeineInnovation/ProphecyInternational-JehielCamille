@@ -15,9 +15,14 @@ builder.Services.AddDbContext<CallCenterManagementDbContext>(options => options.
 
 // Register Services
 builder.Services.AddScoped<IGenericService<AgentModel, int>, AgentService>();
+builder.Services.AddScoped<IGenericService<CallModel, int>, CallService>();
+builder.Services.AddScoped<IGenericService<TicketModel, int>, TicketService>();
+builder.Services.AddScoped<IGenericService<CustomerModel, string>, CustomerService>();
 
-//Register Controllers
+//Add Controllers
 builder.Services.AddControllers();
+
+//Add Controllers
 builder.Services.AddLogging();
 
 // Swagger/OpenAPI configuration
