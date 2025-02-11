@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Database.DbContexts;
 using ProphecyInternational.Server.Interfaces;
@@ -81,6 +82,25 @@ namespace ProphecyInternational.Server.Services
             {
                 throw new KeyNotFoundException($"Agent with ID {id} not found.");
             }
+
+            // Get related calls
+            _ = _dbContext.Calls.ForEachAsync(c => {
+                if(c.AgentId == id)
+                {
+                    // Set AgentId to NULL
+                    c.AgentId = null;
+                }});
+            _dbContext.SaveChanges();
+
+            // Get related tickets
+            _ = _dbContext.Tickets.ForEachAsync(c => {
+                if (c.AgentId == id)
+                {
+                    // Set AgentId to NULL
+                    c.AgentId = null;
+                }
+            });
+            _dbContext.SaveChanges();
 
             _dbContext.Agents.Remove(agent);
             await _dbContext.SaveChangesAsync();
