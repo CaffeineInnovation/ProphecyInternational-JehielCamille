@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphecyInternational.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphecyInternational.Database", "..\ProphecyInternational.Database\ProphecyInternational.Database.csproj", "{BAC35886-A53F-4EA5-A8B0-855B2DF6ADD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProphecyInternational.Test", "..\ProphecyInternational.Test\ProphecyInternational.Test.csproj", "{954692BD-77F3-4D70-9E93-FCA5D4E0A9C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BAC35886-A53F-4EA5-A8B0-855B2DF6ADD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAC35886-A53F-4EA5-A8B0-855B2DF6ADD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAC35886-A53F-4EA5-A8B0-855B2DF6ADD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954692BD-77F3-4D70-9E93-FCA5D4E0A9C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{954692BD-77F3-4D70-9E93-FCA5D4E0A9C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{954692BD-77F3-4D70-9E93-FCA5D4E0A9C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{954692BD-77F3-4D70-9E93-FCA5D4E0A9C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

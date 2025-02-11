@@ -12,3 +12,5 @@
 /.vs
 /ProphecyInternational.Server/.vs
 /ProphecyInternational.Server/ProphecyInternational.Server.csproj.user
+/ProphecyInternational.Test/bin/Debug/net8.0
+/ProphecyInternational.Test/obj
