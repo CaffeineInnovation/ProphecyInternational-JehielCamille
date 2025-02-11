@@ -45,7 +45,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the agent to retrieve.</param>
         /// <returns>An AgentModel object.</returns>
         [HttpGet("GetAgent/{id}", Name = "GetAgent")]
-        public async Task<ActionResult<AgentModel>> GetAgent(int id)
+        public async Task<ActionResult<AgentModel>> GetAgent([FromQuery] int id)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="agent">The AgentModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPost("CreateAgent")]
-        public async Task<ActionResult> CreateAgent(AgentModel agent)
+        public async Task<ActionResult> CreateAgent([FromBody] AgentModel agent)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="agent">The updated AgentModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPut("UpdateAgent/{id}", Name = "UpdateAgent")]
-        public async Task<IActionResult> UpdateAgent(int id, AgentModel agent)
+        public async Task<IActionResult> UpdateAgent([FromQuery] int id, [FromBody] AgentModel agent)
         {
             if (id != agent.Id)
             {
@@ -115,7 +115,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the agent to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpDelete("DeleteAgent/{id}", Name = "DeleteAgent")]
-        public async Task<IActionResult> DeleteAgent(int id)
+        public async Task<IActionResult> DeleteAgent([FromQuery] int id)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="status">The new status of the agent.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPatch("UpdateAgentStatus/{id}/status", Name = "UpdateAgentStatus")]
-        public async Task<IActionResult> UpdateAgentStatus(int id, [FromBody] AgentStatus status)
+        public async Task<IActionResult> UpdateAgentStatus([FromQuery] int id, [FromBody] AgentStatus status)
         {
             try
             {

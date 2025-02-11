@@ -44,7 +44,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the customer to retrieve.</param>
         /// <returns>An CustomerModel object.</returns>
         [HttpGet("GetCustomer/{id}", Name = "GetCustomer")]
-        public async Task<ActionResult<CustomerModel>> GetCustomer(string id)
+        public async Task<ActionResult<CustomerModel>> GetCustomer([FromQuery] string id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="customer">The CustomerModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPost("CreateCustomer")]
-        public async Task<ActionResult> CreateCustomer(CustomerModel customer)
+        public async Task<ActionResult> CreateCustomer([FromBody] CustomerModel customer)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="customer">The updated CustomerModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPut("UpdateCustomer/{id}", Name = "UpdateCustomer")]
-        public async Task<IActionResult> UpdateCustomer(string id, CustomerModel customer)
+        public async Task<IActionResult> UpdateCustomer([FromQuery] string id, [FromBody] CustomerModel customer)
         {
             if (id != customer.Id)
             {
@@ -114,7 +114,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the customer to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpDelete("DeleteCustomer/{id}", Name = "DeleteCustomer")]
-        public async Task<IActionResult> DeleteCustomer(string id)
+        public async Task<IActionResult> DeleteCustomer([FromQuery] string id)
         {
             try
             {

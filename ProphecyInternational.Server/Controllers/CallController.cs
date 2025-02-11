@@ -44,7 +44,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the call to retrieve.</param>
         /// <returns>An CallModel object.</returns>
         [HttpGet("GetCall/{id}", Name = "GetCall")]
-        public async Task<ActionResult<CallModel>> GetCall(int id)
+        public async Task<ActionResult<CallModel>> GetCall([FromQuery] int id)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="call">The CallModel object to create.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPost("CreateCall")]
-        public async Task<ActionResult> CreateCall(CallModel call)
+        public async Task<ActionResult> CreateCall([FromBody] CallModel call)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="call">The updated CallModel object.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPut("UpdateCall/{id}", Name = "UpdateCall")]
-        public async Task<IActionResult> UpdateCall(int id, CallModel call)
+        public async Task<IActionResult> UpdateCall([FromQuery] int id, [FromBody] CallModel call)
         {
             if (id != call.Id)
             {
@@ -114,7 +114,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="id">The ID of the call to delete.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpDelete("DeleteCall/{id}", Name = "DeleteCall")]
-        public async Task<IActionResult> DeleteCall(int id)
+        public async Task<IActionResult> DeleteCall([FromQuery] int id)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace ProphecyInternational.Server.Controllers
         /// <param name="agentId">The new agent of the call.</param>
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpPatch("AssignCallToAgent")]
-        public async Task<IActionResult> AssignCallToAgent(int id, int agentId)
+        public async Task<IActionResult> AssignCallToAgent([FromQuery] int id, [FromQuery] int agentId)
         {
             try
             {
