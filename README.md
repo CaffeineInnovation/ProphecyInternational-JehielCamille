@@ -119,7 +119,7 @@ This project is a **Call Center Management API** built using **ASP.NET Core (.NE
 - **Common Components**: ProphecyInternational.Common
 - **Database**: PProphecyInternational.Database
 - **Server**: ProphecyInternational.Server
-- **Bruno Files**: ProphecyInternational.BrunoFiles
+- **Bruno Files**: ProphecyInternational.ApiClientFiles
 
 ## Configurations
 The following settings could be configured in _ProphecyInternational.Server->appsettings.json_ file
