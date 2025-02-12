@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Server.Interfaces;
+using ProphecyInternational.Server.Services;
 
 namespace ProphecyInternational.Server.Controllers
 {
@@ -32,6 +34,27 @@ namespace ProphecyInternational.Server.Controllers
             try
             {
                 return Ok(await _ticketService.GetAllAsync());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting tickets.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
+        /// Gets paginated list of all tickets.
+        /// </summary>
+        /// <param name="pageNumber">The page number to retrieve (default is 1).</param>
+        /// <param name="pageSize">The number of records per page (default is 10).</param>
+        /// <returns>A list of TicketModel objects.</returns>
+        [AllowAnonymous]
+        [HttpGet("GetPaginatedTickets")]
+        public async Task<ActionResult<IEnumerable<TicketModel>>> GetPaginatedTickets(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                return Ok(await ((IPagedGenericService<TicketModel>)_ticketService).GetPaginatedItemsAsync(pageNumber, pageSize));
             }
             catch (Exception ex)
             {

@@ -4,10 +4,11 @@ using ProphecyInternational.Common.Enums;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Database.DbContexts;
 using ProphecyInternational.Server.Interfaces;
+using ProphecyInternational.Server.Models;
 
 namespace ProphecyInternational.Server.Services
 {
-    public class TicketService : IGenericService<TicketModel, int>
+    public class TicketService : IGenericService<TicketModel, int>, IPagedGenericService<TicketModel>
     {
         private readonly CallCenterManagementDbContext _dbContext;
 
@@ -98,6 +99,40 @@ namespace ProphecyInternational.Server.Services
 
             _dbContext.Tickets.Remove(ticket);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<TicketModel>> GetPaginatedItemsAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var totalCount = await _dbContext.Tickets.CountAsync();
+
+            var tickets = await _dbContext.Tickets
+                .OrderBy(t => t.Id) // Ensure ordering for consistent pagination
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ticket => new TicketModel
+                {
+                    Id = ticket.Id,
+                    CustomerId = ticket.CustomerId,
+                    AgentId = ticket.AgentId,
+                    Status = ticket.Status,
+                    Priority = ticket.Priority,
+                    CreatedAt = ticket.CreatedAt,
+                    UpdatedAt = ticket.UpdatedAt,
+                    Description = ticket.Description,
+                    Resolution = ticket.Resolution
+                })
+                .ToListAsync();
+
+            return new PagedResult<TicketModel>
+            {
+                Items = tickets,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }
