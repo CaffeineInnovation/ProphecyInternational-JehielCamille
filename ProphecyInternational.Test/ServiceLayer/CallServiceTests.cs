@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProphecyInternational.Common.Enums;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Database.DbContexts;
+using ProphecyInternational.Server.Interfaces;
+using ProphecyInternational.Server.Models;
 using ProphecyInternational.Server.Services;
 
 namespace ProphecyInternational.Test.ServiceLayer
@@ -44,6 +47,52 @@ namespace ProphecyInternational.Test.ServiceLayer
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
         }
+
+        [Fact]
+        public async Task GetAllCallsPaginated_ReturnsOkResult_WithPaginatedListOfCalls()
+        {
+            // Arrange
+            _dbContext.Calls.AddRange(
+                new CallModel { Id = 1, CustomerId = "1001", AgentId = 201, StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(10), Status = CallStatus.Completed, Notes = "Call 1" },
+                new CallModel { Id = 2, CustomerId = "1002", AgentId = 202, StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(15), Status = CallStatus.InProgress, Notes = "Call 2" }
+            );
+            await _dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(2, 1);
+            
+            // Assert
+            var returnedData = Assert.IsType<PagedResult<CallModel>>(result);
+
+            Assert.Equal(2, returnedData.TotalCount);
+            Assert.Equal(2, returnedData.PageNumber);
+            Assert.Equal(1, returnedData.PageSize);
+            Assert.Equal(1, returnedData.Items.Count());
+        }
+
+        [Fact]
+        public async Task GetAllCallsPaginated_PageNumberExceedsTotalPages_ReturnsEmptyList()
+        {
+            // Arrange
+            _dbContext.Calls.AddRange(
+                new CallModel { Id = 1, CustomerId = "1001", AgentId = 201, StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(10), Status = CallStatus.Completed, Notes = "Call 1" },
+                new CallModel { Id = 2, CustomerId = "1002", AgentId = 202, StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(15), Status = CallStatus.InProgress, Notes = "Call 2" }
+            );
+            await _dbContext.SaveChangesAsync();
+
+            // Act: Request page 3, which is out of range (only 2 records exist)
+            var result = await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(3, 1);
+
+            // Assert
+            var returnedData = Assert.IsType<PagedResult<CallModel>>(result);
+
+            Assert.Equal(2, returnedData.TotalCount);
+            Assert.Equal(3, returnedData.PageNumber);
+            Assert.Equal(1, returnedData.PageSize);
+            Assert.Empty(returnedData.Items); // Ensure no data is returned for an out-of-range page
+        }
+
+
 
         [Fact]
         public async Task GetByIdAsync_ShouldReturnCorrectCall()

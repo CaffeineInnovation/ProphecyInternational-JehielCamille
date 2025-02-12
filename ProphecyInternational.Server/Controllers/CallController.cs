@@ -41,6 +41,25 @@ namespace ProphecyInternational.Server.Controllers
         }
 
         /// <summary>
+        /// Gets a list of all calls.
+        /// </summary>
+        /// <returns>A list of CallModel objects.</returns>
+        [AllowAnonymous]
+        [HttpGet("GetPaginatedCalls")]
+        public async Task<ActionResult<IEnumerable<CallModel>>> GetPaginatedCalls(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                return Ok(await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(pageNumber, pageSize));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting calls.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
         /// Gets a specific call by ID.
         /// </summary>
         /// <param name="id">The ID of the call to retrieve.</param>

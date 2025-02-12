@@ -2,10 +2,11 @@
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Database.DbContexts;
 using ProphecyInternational.Server.Interfaces;
+using ProphecyInternational.Server.Models;
 
 namespace ProphecyInternational.Server.Services
 {
-    public class CallService : IGenericService<CallModel, int>
+    public class CallService : IGenericService<CallModel, int>, IPagedGenericService<CallModel>
     {
         private readonly CallCenterManagementDbContext _dbContext;
 
@@ -90,6 +91,38 @@ namespace ProphecyInternational.Server.Services
 
             _dbContext.Calls.Remove(call);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<CallModel>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _dbContext.Calls
+                .Select(call => new CallModel
+                {
+                    Id = call.Id,
+                    CustomerId = call.CustomerId,
+                    AgentId = call.AgentId,
+                    StartTime = call.StartTime,
+                    EndTime = call.EndTime,
+                    Status = call.Status,
+                    Notes = call.Notes
+                });
+
+            var totalCount = await query.CountAsync(); // Total records count
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<CallModel>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }

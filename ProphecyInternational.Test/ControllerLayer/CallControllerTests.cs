@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using ProphecyInternational.Common.Models;
 using ProphecyInternational.Server.Controllers;
 using ProphecyInternational.Server.Interfaces;
+using ProphecyInternational.Common.Enums;
+using ProphecyInternational.Server.Models;
 
 namespace ProphecyInternational.Test.ControllerLayer
 {
@@ -111,5 +113,87 @@ namespace ProphecyInternational.Test.ControllerLayer
 
             Assert.IsType<NotFoundResult>(result);
         }
+
+        [Fact]
+        public async Task GetPaginatedCalls_ValidPage_ReturnsOkWithPaginatedData()
+        {
+            // Arrange
+            var pagedResult = new PagedResult<CallModel>
+            {
+                Items = new List<CallModel>
+        {
+            new CallModel { Id = 1, CustomerId = "1001", AgentId = 201, StartTime = DateTime.Now, EndTime = DateTime.Now.AddMinutes(10), Status = CallStatus.Completed, Notes = "Call 1" }
+        },
+                TotalCount = 3,
+                PageNumber = 1,
+                PageSize = 1
+            };
+
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(1, 1))
+                        .ReturnsAsync(pagedResult);
+
+            // Act
+            var result = await _controller.GetPaginatedCalls(1, 1);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var returnedData = Assert.IsType<PagedResult<CallModel>>(okResult.Value);
+
+            Assert.Equal(3, returnedData.TotalCount);
+            Assert.Equal(1, returnedData.PageNumber);
+            Assert.Equal(1, returnedData.PageSize);
+            Assert.Single(returnedData.Items);
+        }
+
+        [Fact]
+        public async Task GetPaginatedCalls_PageOutOfRange_ReturnsEmptyList()
+        {
+            // Arrange: Simulate an out-of-range page request
+            var pagedResult = new PagedResult<CallModel>
+            {
+                Items = new List<CallModel>(), // No data for this page
+                TotalCount = 2,
+                PageNumber = 5, // Requested page is out of range
+                PageSize = 1
+            };
+
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(5, 1))
+                        .ReturnsAsync(pagedResult);
+
+            // Act
+            var result = await _controller.GetPaginatedCalls(5, 1);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var returnedData = Assert.IsType<PagedResult<CallModel>>(okResult.Value);
+
+            Assert.Equal(2, returnedData.TotalCount);
+            Assert.Equal(5, returnedData.PageNumber);
+            Assert.Equal(1, returnedData.PageSize);
+            Assert.Empty(returnedData.Items);
+        }
+
+        [Fact]
+        public async Task GetPaginatedCalls_ServiceThrowsException_ReturnsInternalServerError()
+        {
+            // Arrange: Simulate an exception being thrown
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(It.IsAny<int>(), It.IsAny<int>()))
+                        .ThrowsAsync(new Exception("Database failure"));
+
+            // Act
+            var result = await _controller.GetPaginatedCalls(1, 1);
+
+            // Assert
+            var objectResult = Assert.IsType<ObjectResult>(result.Result);
+            Assert.Equal(500, objectResult.StatusCode);
+            Assert.Equal("Internal server error", objectResult.Value);
+
+            // Verify logger was called
+            _mockLogger.Verify(
+                x => x.LogError(It.IsAny<Exception>(), "Error occurred while getting calls."),
+                Times.Once
+            );
+        }
+
     }
 }
