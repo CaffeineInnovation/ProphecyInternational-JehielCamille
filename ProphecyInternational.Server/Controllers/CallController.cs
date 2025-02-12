@@ -41,8 +41,10 @@ namespace ProphecyInternational.Server.Controllers
         }
 
         /// <summary>
-        /// Gets a list of all calls.
+        /// Gets paginated list of calls.
         /// </summary>
+        /// <param name="pageNumber">The page number to retrieve (default is 1).</param>
+        /// <param name="pageSize">The number of records per page (default is 10).</param>
         /// <returns>A list of CallModel objects.</returns>
         [AllowAnonymous]
         [HttpGet("GetPaginatedCalls")]
