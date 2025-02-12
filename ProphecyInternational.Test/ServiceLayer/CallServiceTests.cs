@@ -59,7 +59,7 @@ namespace ProphecyInternational.Test.ServiceLayer
             await _dbContext.SaveChangesAsync();
 
             // Act
-            var result = await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(2, 1);
+            var result = await ((IPagedGenericService<CallModel>)_callService).GetPaginatedItemsAsync(2, 1);
             
             // Assert
             var returnedData = Assert.IsType<PagedResult<CallModel>>(result);
@@ -81,7 +81,7 @@ namespace ProphecyInternational.Test.ServiceLayer
             await _dbContext.SaveChangesAsync();
 
             // Act: Request page 3, which is out of range (only 2 records exist)
-            var result = await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(3, 1);
+            var result = await ((IPagedGenericService<CallModel>)_callService).GetPaginatedItemsAsync(3, 1);
 
             // Assert
             var returnedData = Assert.IsType<PagedResult<CallModel>>(result);

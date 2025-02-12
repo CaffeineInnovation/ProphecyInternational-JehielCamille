@@ -129,7 +129,7 @@ namespace ProphecyInternational.Test.ControllerLayer
                 PageSize = 1
             };
 
-            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(1, 1))
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetPaginatedItemsAsync(1, 1))
                         .ReturnsAsync(pagedResult);
 
             // Act
@@ -157,7 +157,7 @@ namespace ProphecyInternational.Test.ControllerLayer
                 PageSize = 1
             };
 
-            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(5, 1))
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetPaginatedItemsAsync(5, 1))
                         .ReturnsAsync(pagedResult);
 
             // Act
@@ -177,7 +177,7 @@ namespace ProphecyInternational.Test.ControllerLayer
         public async Task GetPaginatedCalls_ServiceThrowsException_ReturnsInternalServerError()
         {
             // Arrange: Simulate an exception being thrown
-            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetAllPaginatedAsync(It.IsAny<int>(), It.IsAny<int>()))
+            _mockService.Setup(s => ((IPagedGenericService<CallModel>)s).GetPaginatedItemsAsync(It.IsAny<int>(), It.IsAny<int>()))
                         .ThrowsAsync(new Exception("Database failure"));
 
             // Act

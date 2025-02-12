@@ -52,7 +52,7 @@ namespace ProphecyInternational.Server.Controllers
         {
             try
             {
-                return Ok(await ((IPagedGenericService<CallModel>)_callService).GetAllPaginatedAsync(pageNumber, pageSize));
+                return Ok(await ((IPagedGenericService<CallModel>)_callService).GetPaginatedItemsAsync(pageNumber, pageSize));
             }
             catch (Exception ex)
             {

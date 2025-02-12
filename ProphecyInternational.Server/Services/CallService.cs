@@ -93,7 +93,7 @@ namespace ProphecyInternational.Server.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<CallModel>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<CallModel>> GetPaginatedItemsAsync(int pageNumber, int pageSize)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
